@@ -22,12 +22,6 @@ export default function AuthLayout() {
   return (
     <div className="min-h-screen grid place-items-center bg-background px-4 py-12">
       <div className="w-full max-w-sm">
-        <div className="mb-8">
-          <span className="text-xl font-display font-semibold tracking-tight text-foreground">
-            find-cat-ely
-          </span>
-          <p className="mt-1 text-xs text-muted-foreground">ABAC Access Control Platform</p>
-        </div>
         <Outlet />
       </div>
     </div>

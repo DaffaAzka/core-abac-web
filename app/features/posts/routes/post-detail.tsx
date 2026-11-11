@@ -10,13 +10,13 @@ import type { Route } from "./+types/post-detail";
 import { getPost, updatePost, deletePost, type Post } from "../api";
 import { updatePostSchema, type UpdatePostInput } from "../schemas";
 import { PostForm } from "../components/PostForm";
-import { PageHeader } from "~/components/PageHeader";
-import { ConfirmDialog } from "~/components/ConfirmDialog";
-import { Button } from "~/components/ui/button";
-import { RouteErrorBoundary } from "~/components/RouteErrorBoundary";
-import { Can } from "~/features/access";
-import { formatDate } from "~/lib/utils";
-import { isApiError } from "~/lib/errors";
+import { PageHeader } from "@/components/PageHeader";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { Button } from "@/components/ui/button";
+import { RouteErrorBoundary } from "@/components/RouteErrorBoundary";
+import { Can } from "@/features/access";
+import { formatDate } from "@/lib/utils";
+import { isApiError } from "@/lib/errors";
 
 export function meta({ loaderData }: Route.MetaArgs): Route.MetaDescriptors {
   return [{ title: `${loaderData?.post.title ?? "Post"}` }];

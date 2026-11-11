@@ -2,8 +2,8 @@ import * as React from "react";
 import { NavLink, Outlet } from "react-router";
 import type { Route } from "./+types/access-layout";
 import { can } from "../can";
-import { PageHeader } from "~/components/PageHeader";
-import { RouteErrorBoundary } from "~/components/RouteErrorBoundary";
+import { PageHeader } from "@/components/PageHeader";
+import { RouteErrorBoundary } from "@/components/RouteErrorBoundary";
 
 export function meta(): Route.MetaDescriptors {
   return [{ title: "Access Control" }];

@@ -4,15 +4,15 @@ import type { Route } from "./+types/access-policies";
 import { listPolicies, definePolicy, deletePolicy, type Policy } from "../api";
 import { definePolicySchema, type DefinePolicyInput } from "../schemas";
 import { invalidatePermissionCache } from "../can";
-import { DataTable, type Column } from "~/components/DataTable";
-import { ConfirmDialog } from "~/components/ConfirmDialog";
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
-import { RouteErrorBoundary } from "~/components/RouteErrorBoundary";
-import { isApiError } from "~/lib/errors";
+import { DataTable, type Column } from "@/components/DataTable";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { RouteErrorBoundary } from "@/components/RouteErrorBoundary";
+import { isApiError } from "@/lib/errors";
 
 export function meta(): Route.MetaDescriptors {
   return [{ title: "ABAC Policies" }];

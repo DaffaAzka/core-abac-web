@@ -2,7 +2,7 @@ import { redirect } from "react-router";
 import type { Route } from "./+types/sign-out";
 import { signOut, clearToken } from "../api";
 import { sessionStore } from "../session";
-import { invalidatePermissionCache } from "~/features/access";
+import { invalidatePermissionCache } from "@/features/access";
 
 export async function clientAction(): Promise<Response> {
   try {
@@ -23,4 +23,3 @@ export async function clientLoader(): Promise<Response> {
 export default function SignOutPage() {
   return null;
 }
-

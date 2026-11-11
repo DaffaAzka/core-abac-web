@@ -1,4 +1,4 @@
-import { http } from "~/lib/http";
+import { http } from "@/lib/http";
 import {
   checkPermissionResponseSchema,
   grantSchema,
@@ -65,12 +65,18 @@ export async function listGrants(userId: string): Promise<Grant[]> {
   return z.array(grantSchema).parse(res.data);
 }
 
-export async function grantPermission(userId: string, body: GrantInput): Promise<Grant> {
+export async function grantPermission(
+  userId: string,
+  body: GrantInput,
+): Promise<Grant> {
   const res = await http.post(`/access/grants/${userId}`, body);
   return grantSchema.parse(res.data);
 }
 
-export async function denyPermission(userId: string, body: GrantInput): Promise<Grant> {
+export async function denyPermission(
+  userId: string,
+  body: GrantInput,
+): Promise<Grant> {
   const res = await http.post(`/access/grants/${userId}/deny`, body);
   return grantSchema.parse(res.data);
 }
@@ -81,8 +87,9 @@ export async function revokeGrant(grantId: string): Promise<void> {
 
 // ── Permission check ──────────────────────────────────────────────────────────
 
-export async function checkPermission(body: CheckPermissionInput): Promise<CheckPermissionResult> {
+export async function checkPermission(
+  body: CheckPermissionInput,
+): Promise<CheckPermissionResult> {
   const res = await http.post("/access/check", body);
   return checkPermissionResponseSchema.parse(res.data);
 }
-

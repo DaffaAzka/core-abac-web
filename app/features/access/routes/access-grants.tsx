@@ -10,16 +10,16 @@ import {
 } from "../api";
 import { grantInputSchema } from "../schemas";
 import { invalidatePermissionCache } from "../can";
-import { listUsers, type UserListItem } from "~/features/users";
-import { ConfirmDialog } from "~/components/ConfirmDialog";
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { EmptyState } from "~/components/EmptyState";
-import { RouteErrorBoundary } from "~/components/RouteErrorBoundary";
-import { formatDateOnly } from "~/lib/utils";
-import { isApiError } from "~/lib/errors";
+import { listUsers, type UserListItem } from "@/features/users";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { EmptyState } from "@/components/EmptyState";
+import { RouteErrorBoundary } from "@/components/RouteErrorBoundary";
+import { formatDateOnly } from "@/lib/utils";
+import { isApiError } from "@/lib/errors";
 
 export function meta(): Route.MetaDescriptors {
   return [{ title: "User Grants" }];

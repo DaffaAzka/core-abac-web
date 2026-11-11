@@ -2,10 +2,10 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createPostSchema, type CreatePostInput } from "../schemas";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface PostFormProps {
   defaultValues?: Partial<CreatePostInput>;
@@ -41,7 +41,9 @@ export function PostForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
       {generalError && (
-        <div role="alert" className="text-xs text-destructive rounded-md bg-destructive/10 border border-destructive/20 p-3">
+        <div
+          role="alert"
+          className="text-xs text-destructive rounded-md bg-destructive/10 border border-destructive/20 p-3">
           {generalError}
         </div>
       )}
@@ -52,7 +54,9 @@ export function PostForm({
           id="title"
           placeholder="e.g. Attributes in Modern ABAC"
           aria-invalid={!!errors.title || !!fieldErrors?.title}
-          aria-describedby={errors.title || fieldErrors?.title ? "title-error" : undefined}
+          aria-describedby={
+            errors.title || fieldErrors?.title ? "title-error" : undefined
+          }
           {...register("title")}
         />
         {(errors.title || fieldErrors?.title) && (
@@ -69,7 +73,9 @@ export function PostForm({
           rows={8}
           placeholder="Write the post content here…"
           aria-invalid={!!errors.content || !!fieldErrors?.content}
-          aria-describedby={errors.content || fieldErrors?.content ? "content-error" : undefined}
+          aria-describedby={
+            errors.content || fieldErrors?.content ? "content-error" : undefined
+          }
           {...register("content")}
         />
         {(errors.content || fieldErrors?.content) && (
@@ -84,7 +90,11 @@ export function PostForm({
           {submitting ? "Saving…" : submitLabel}
         </Button>
         {onCancel && (
-          <Button type="button" variant="outline" onClick={onCancel} disabled={submitting}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={submitting}>
             Cancel
           </Button>
         )}
@@ -92,4 +102,3 @@ export function PostForm({
     </form>
   );
 }
-

@@ -1,4 +1,4 @@
-import { http } from "~/lib/http";
+import { http } from "@/lib/http";
 import {
   authResponseSchema,
   sessionResponseSchema,
@@ -41,4 +41,3 @@ export function clearToken(): void {
 export function getStoredToken(): string | null {
   return localStorage.getItem("auth_token");
 }
-

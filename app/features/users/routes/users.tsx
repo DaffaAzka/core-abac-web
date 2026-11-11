@@ -2,13 +2,13 @@ import * as React from "react";
 import { useFetcher, useLoaderData } from "react-router";
 import type { Route } from "./+types/users";
 import { listUsers, assignRole, revokeRole, type UserListItem } from "../api";
-import { listRoles, type Role, can, Can } from "~/features/access";
-import { PageHeader } from "~/components/PageHeader";
-import { DataTable, type Column } from "~/components/DataTable";
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
-import { RouteErrorBoundary } from "~/components/RouteErrorBoundary";
-import { isApiError } from "~/lib/errors";
+import { listRoles, type Role, can, Can } from "@/features/access";
+import { PageHeader } from "@/components/PageHeader";
+import { DataTable, type Column } from "@/components/DataTable";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { RouteErrorBoundary } from "@/components/RouteErrorBoundary";
+import { isApiError } from "@/lib/errors";
 
 export function meta(): Route.MetaDescriptors {
   return [{ title: "Users" }];

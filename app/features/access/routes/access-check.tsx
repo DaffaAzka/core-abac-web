@@ -3,13 +3,13 @@ import { useActionData, useNavigation, useSubmit } from "react-router";
 import type { Route } from "./+types/access-check";
 import { checkPermission, type CheckPermissionResult } from "../api";
 import { checkPermissionSchema } from "../schemas";
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
-import { RouteErrorBoundary } from "~/components/RouteErrorBoundary";
-import { isApiError } from "~/lib/errors";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { RouteErrorBoundary } from "@/components/RouteErrorBoundary";
+import { isApiError } from "@/lib/errors";
 
 export function meta(): Route.MetaDescriptors {
   return [{ title: "Test Permission" }];

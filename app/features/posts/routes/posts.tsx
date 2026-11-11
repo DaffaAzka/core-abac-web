@@ -2,11 +2,11 @@ import * as React from "react";
 import { Link, useLoaderData } from "react-router";
 import type { Route } from "./+types/posts";
 import { listPosts, type PostListItem } from "../api";
-import { PageHeader } from "~/components/PageHeader";
-import { EmptyState } from "~/components/EmptyState";
-import { RouteErrorBoundary } from "~/components/RouteErrorBoundary";
-import { Can } from "~/features/access";
-import { formatDateOnly } from "~/lib/utils";
+import { PageHeader } from "@/components/PageHeader";
+import { EmptyState } from "@/components/EmptyState";
+import { RouteErrorBoundary } from "@/components/RouteErrorBoundary";
+import { Can } from "@/features/access";
+import { formatDateOnly } from "@/lib/utils";
 
 export function meta(): Route.MetaDescriptors {
   return [{ title: "Posts" }];

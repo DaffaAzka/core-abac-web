@@ -9,10 +9,10 @@ import type { Route } from "./+types/post-new";
 import { createPost } from "../api";
 import { createPostSchema, type CreatePostInput } from "../schemas";
 import { PostForm } from "../components/PostForm";
-import { PageHeader } from "~/components/PageHeader";
-import { RouteErrorBoundary } from "~/components/RouteErrorBoundary";
-import { can } from "~/features/access";
-import { isApiError } from "~/lib/errors";
+import { PageHeader } from "@/components/PageHeader";
+import { RouteErrorBoundary } from "@/components/RouteErrorBoundary";
+import { can } from "@/features/access";
+import { isApiError } from "@/lib/errors";
 
 export function meta(): Route.MetaDescriptors {
   return [{ title: "Write post" }];

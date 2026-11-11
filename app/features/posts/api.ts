@@ -1,5 +1,12 @@
-import { http } from "~/lib/http";
-import { postSchema, postListItemSchema, type CreatePostInput, type Post, type PostListItem, type UpdatePostInput } from "./schemas";
+import { http } from "@/lib/http";
+import {
+  postSchema,
+  postListItemSchema,
+  type CreatePostInput,
+  type Post,
+  type PostListItem,
+  type UpdatePostInput,
+} from "./schemas";
 import { z } from "zod";
 
 export type { Post, PostListItem, CreatePostInput, UpdatePostInput };
@@ -19,7 +26,10 @@ export async function createPost(body: CreatePostInput): Promise<Post> {
   return postSchema.parse(res.data);
 }
 
-export async function updatePost(id: string, body: UpdatePostInput): Promise<Post> {
+export async function updatePost(
+  id: string,
+  body: UpdatePostInput,
+): Promise<Post> {
   const res = await http.patch(`/posts/${id}`, body);
   return postSchema.parse(res.data);
 }
@@ -27,4 +37,3 @@ export async function updatePost(id: string, body: UpdatePostInput): Promise<Pos
 export async function deletePost(id: string): Promise<void> {
   await http.delete(`/posts/${id}`);
 }
-

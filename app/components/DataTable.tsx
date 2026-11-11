@@ -6,9 +6,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "~/components/ui/table";
-import { EmptyState } from "~/components/EmptyState";
-import { cn } from "~/lib/utils";
+} from "@/components/ui/table";
+import { EmptyState } from "@/components/EmptyState";
+import { cn } from "@/lib/utils";
 
 export interface Column<T> {
   key: string;
@@ -39,14 +39,26 @@ export function DataTable<T>({
 }: DataTableProps<T>) {
   if (data.length === 0) {
     return (
-      <div className={cn("rounded-md border border-border bg-card p-6", className)}>
-        <EmptyState title={emptyTitle} description={emptyDescription} action={emptyAction} />
+      <div
+        className={cn(
+          "rounded-md border border-border bg-card p-6",
+          className,
+        )}>
+        <EmptyState
+          title={emptyTitle}
+          description={emptyDescription}
+          action={emptyAction}
+        />
       </div>
     );
   }
 
   return (
-    <div className={cn("rounded-md border border-border bg-card overflow-hidden", className)}>
+    <div
+      className={cn(
+        "rounded-md border border-border bg-card overflow-hidden",
+        className,
+      )}>
       <Table>
         <TableHeader>
           <TableRow>
@@ -72,4 +84,3 @@ export function DataTable<T>({
     </div>
   );
 }
-

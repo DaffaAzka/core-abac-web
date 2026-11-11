@@ -1,6 +1,6 @@
 import * as React from "react";
 import { can, checkCached } from "./can";
-import { useCurrentUser } from "~/features/auth";
+import { useCurrentUser } from "@/features/auth";
 
 /**
  * React hook to check permission against the backend ABAC API.
@@ -9,7 +9,7 @@ import { useCurrentUser } from "~/features/auth";
 export function useCan(
   action: string,
   subject: string,
-  attributes?: Record<string, unknown>
+  attributes?: Record<string, unknown>,
 ): boolean {
   const user = useCurrentUser();
   const cached = checkCached(action, subject, attributes);

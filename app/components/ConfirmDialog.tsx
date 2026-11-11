@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Button } from "~/components/ui/button";
-import { cn } from "~/lib/utils";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -42,14 +42,17 @@ export function ConfirmDialog({
       aria-modal="true"
       aria-labelledby="confirm-dialog-title"
       aria-describedby="confirm-dialog-description"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-xs animate-in fade-in"
-    >
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-xs animate-in fade-in">
       <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-lg space-y-4 animate-in zoom-in-95">
         <div className="space-y-1.5">
-          <h2 id="confirm-dialog-title" className="text-base font-semibold text-foreground">
+          <h2
+            id="confirm-dialog-title"
+            className="text-base font-semibold text-foreground">
             {title}
           </h2>
-          <p id="confirm-dialog-description" className="text-xs text-muted-foreground leading-relaxed">
+          <p
+            id="confirm-dialog-description"
+            className="text-xs text-muted-foreground leading-relaxed">
             {description}
           </p>
         </div>
@@ -59,8 +62,7 @@ export function ConfirmDialog({
             variant="outline"
             size="sm"
             onClick={onCancel}
-            disabled={loading}
-          >
+            disabled={loading}>
             {cancelLabel}
           </Button>
           <Button
@@ -68,8 +70,7 @@ export function ConfirmDialog({
             variant={destructive ? "destructive" : "default"}
             size="sm"
             onClick={onConfirm}
-            disabled={loading}
-          >
+            disabled={loading}>
             {loading ? "Working…" : confirmLabel}
           </Button>
         </div>
@@ -77,4 +78,3 @@ export function ConfirmDialog({
     </div>
   );
 }
-
