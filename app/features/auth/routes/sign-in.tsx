@@ -1,5 +1,12 @@
 import * as React from "react";
-import { Form, Link, redirect, useActionData, useNavigation, useSubmit } from "react-router";
+import {
+  Form,
+  Link,
+  redirect,
+  useActionData,
+  useNavigation,
+  useSubmit,
+} from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Route } from "./+types/sign-in";
@@ -12,7 +19,7 @@ import { isApiError } from "~/lib/errors";
 import { RouteErrorBoundary } from "~/components/RouteErrorBoundary";
 
 export function meta(): Route.MetaDescriptors {
-  return [{ title: "Sign in — find-cat-ely" }];
+  return [{ title: "Sign in" }];
 }
 
 export const handle = { breadcrumb: "Sign in" };
@@ -23,7 +30,9 @@ type ActionData = {
   fieldErrors?: Partial<Record<keyof SignInInput, string>>;
 };
 
-export async function clientAction({ request }: Route.ClientActionArgs): Promise<ActionData | Response> {
+export async function clientAction({
+  request,
+}: Route.ClientActionArgs): Promise<ActionData | Response> {
   const form = await request.formData();
   const raw = {
     email: form.get("email"),
@@ -74,12 +83,18 @@ export default function SignInPage() {
   return (
     <div className="space-y-6 animate-page">
       <div className="space-y-1">
-        <h1 className="text-xl font-display font-semibold text-foreground">Sign in</h1>
-        <p className="text-xs text-muted-foreground">Enter your credentials to access find-cat-ely</p>
+        <h1 className="text-xl font-display font-semibold text-foreground">
+          Sign in
+        </h1>
+        <p className="text-xs text-muted-foreground">
+          Enter your credentials to access find-cat-ely
+        </p>
       </div>
 
       {actionData && !actionData.ok && !actionData.fieldErrors && (
-        <div role="alert" className="text-xs text-destructive rounded-md bg-destructive/10 border border-destructive/20 p-3">
+        <div
+          role="alert"
+          className="text-xs text-destructive rounded-md bg-destructive/10 border border-destructive/20 p-3">
           {actionData.error}
         </div>
       )}
@@ -93,7 +108,11 @@ export default function SignInPage() {
             autoComplete="email"
             placeholder="alice@example.com"
             aria-invalid={!!errors.email || !!actionData?.fieldErrors?.email}
-            aria-describedby={errors.email || actionData?.fieldErrors?.email ? "email-error" : undefined}
+            aria-describedby={
+              errors.email || actionData?.fieldErrors?.email ?
+                "email-error"
+              : undefined
+            }
             {...register("email")}
           />
           {(errors.email || actionData?.fieldErrors?.email) && (
@@ -109,8 +128,14 @@ export default function SignInPage() {
             id="password"
             type="password"
             autoComplete="current-password"
-            aria-invalid={!!errors.password || !!actionData?.fieldErrors?.password}
-            aria-describedby={errors.password || actionData?.fieldErrors?.password ? "password-error" : undefined}
+            aria-invalid={
+              !!errors.password || !!actionData?.fieldErrors?.password
+            }
+            aria-describedby={
+              errors.password || actionData?.fieldErrors?.password ?
+                "password-error"
+              : undefined
+            }
             {...register("password")}
           />
           {(errors.password || actionData?.fieldErrors?.password) && (
@@ -127,7 +152,9 @@ export default function SignInPage() {
 
       <p className="text-center text-xs text-muted-foreground">
         Need an account?{" "}
-        <Link to="/sign-up" className="text-primary hover:underline font-medium">
+        <Link
+          to="/sign-up"
+          className="text-primary hover:underline font-medium">
           Create account
         </Link>
       </p>

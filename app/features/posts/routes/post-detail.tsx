@@ -1,5 +1,11 @@
 import * as React from "react";
-import { Link, redirect, useActionData, useNavigation, useSubmit } from "react-router";
+import {
+  Link,
+  redirect,
+  useActionData,
+  useNavigation,
+  useSubmit,
+} from "react-router";
 import type { Route } from "./+types/post-detail";
 import { getPost, updatePost, deletePost, type Post } from "../api";
 import { updatePostSchema, type UpdatePostInput } from "../schemas";
@@ -13,23 +19,32 @@ import { formatDate } from "~/lib/utils";
 import { isApiError } from "~/lib/errors";
 
 export function meta({ loaderData }: Route.MetaArgs): Route.MetaDescriptors {
-  return [{ title: `${loaderData?.post.title ?? "Post"} — find-cat-ely` }];
+  return [{ title: `${loaderData?.post.title ?? "Post"}` }];
 }
 
 export const handle = {
   breadcrumb: (data: { post: Post }) => data?.post?.title ?? "Post",
 };
 
-export async function clientLoader({ params }: Route.ClientLoaderArgs): Promise<{ post: Post }> {
+export async function clientLoader({
+  params,
+}: Route.ClientLoaderArgs): Promise<{ post: Post }> {
   const post = await getPost(params["id"]!);
   return { post };
 }
 
 type ActionData =
   | { ok: true }
-  | { ok: false; error: string; fieldErrors?: Partial<Record<keyof UpdatePostInput, string>> };
+  | {
+      ok: false;
+      error: string;
+      fieldErrors?: Partial<Record<keyof UpdatePostInput, string>>;
+    };
 
-export async function clientAction({ request, params }: Route.ClientActionArgs): Promise<ActionData | Response> {
+export async function clientAction({
+  request,
+  params,
+}: Route.ClientActionArgs): Promise<ActionData | Response> {
   const form = await request.formData();
   const intent = form.get("intent");
 
@@ -75,9 +90,11 @@ export default function PostDetailPage({ loaderData }: Route.ComponentProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
 
   const isDeleting =
-    navigation.state === "submitting" && navigation.formData?.get("intent") === "delete";
+    navigation.state === "submitting" &&
+    navigation.formData?.get("intent") === "delete";
   const isUpdating =
-    navigation.state === "submitting" && navigation.formData?.get("intent") !== "delete";
+    navigation.state === "submitting" &&
+    navigation.formData?.get("intent") !== "delete";
 
   const handleUpdate = (data: UpdatePostInput) => {
     submit(data as Record<string, string>, { method: "post" });
@@ -93,27 +110,34 @@ export default function PostDetailPage({ loaderData }: Route.ComponentProps) {
     <div className="space-y-6 max-w-2xl animate-page">
       <PageHeader
         title={isEditing ? "Edit post" : post.title}
-        description={isEditing ? undefined : `Last updated on ${formatDate(post.updatedAt)}`}
-      >
+        description={
+          isEditing ? undefined : (
+            `Last updated on ${formatDate(post.updatedAt)}`
+          )
+        }>
         {!isEditing && (
           <div className="flex items-center gap-2">
-            <Can action="update" subject="Post" attributes={{ authorId: post.authorId }}>
+            <Can
+              action="update"
+              subject="Post"
+              attributes={{ authorId: post.authorId }}>
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => setIsEditing(true)}
-              >
+                onClick={() => setIsEditing(true)}>
                 Edit post
               </Button>
             </Can>
-            <Can action="delete" subject="Post" attributes={{ authorId: post.authorId }}>
+            <Can
+              action="delete"
+              subject="Post"
+              attributes={{ authorId: post.authorId }}>
               <Button
                 type="button"
                 variant="destructive"
                 size="sm"
-                onClick={() => setShowDeleteConfirm(true)}
-              >
+                onClick={() => setShowDeleteConfirm(true)}>
                 Delete post
               </Button>
             </Can>
@@ -122,12 +146,14 @@ export default function PostDetailPage({ loaderData }: Route.ComponentProps) {
       </PageHeader>
 
       {actionData && !actionData.ok && (
-        <div role="alert" className="text-xs text-destructive rounded-md bg-destructive/10 border border-destructive/20 p-3">
+        <div
+          role="alert"
+          className="text-xs text-destructive rounded-md bg-destructive/10 border border-destructive/20 p-3">
           {actionData.error}
         </div>
       )}
 
-      {isEditing ? (
+      {isEditing ?
         <PostForm
           defaultValues={{ title: post.title, content: post.content }}
           submitLabel="Save changes"
@@ -135,27 +161,27 @@ export default function PostDetailPage({ loaderData }: Route.ComponentProps) {
           onSubmit={handleUpdate}
           onCancel={() => setIsEditing(false)}
         />
-      ) : (
-        <div className="space-y-6">
+      : <div className="space-y-6">
           <div className="text-sm text-foreground leading-relaxed whitespace-pre-wrap font-sans">
             {post.content}
           </div>
 
           <div className="pt-4 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
-            <span>Author ID: <code className="font-mono">{post.authorId}</code></span>
+            <span>
+              Author ID: <code className="font-mono">{post.authorId}</code>
+            </span>
             <span>Created: {formatDate(post.createdAt)}</span>
           </div>
 
           <div>
             <Link
               to="/posts"
-              className="text-xs text-primary hover:underline font-medium"
-            >
+              className="text-xs text-primary hover:underline font-medium">
               ← Back to posts
             </Link>
           </div>
         </div>
-      )}
+      }
 
       <ConfirmDialog
         open={showDeleteConfirm}
@@ -172,4 +198,3 @@ export default function PostDetailPage({ loaderData }: Route.ComponentProps) {
 }
 
 export { RouteErrorBoundary as ErrorBoundary };
-

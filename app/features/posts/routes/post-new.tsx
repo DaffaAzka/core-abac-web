@@ -1,5 +1,10 @@
 import * as React from "react";
-import { redirect, useActionData, useNavigation, useSubmit } from "react-router";
+import {
+  redirect,
+  useActionData,
+  useNavigation,
+  useSubmit,
+} from "react-router";
 import type { Route } from "./+types/post-new";
 import { createPost } from "../api";
 import { createPostSchema, type CreatePostInput } from "../schemas";
@@ -10,7 +15,7 @@ import { can } from "~/features/access";
 import { isApiError } from "~/lib/errors";
 
 export function meta(): Route.MetaDescriptors {
-  return [{ title: "Write post — find-cat-ely" }];
+  return [{ title: "Write post" }];
 }
 
 export const handle = { breadcrumb: "Write post" };
@@ -18,16 +23,24 @@ export const handle = { breadcrumb: "Write post" };
 export async function clientLoader(): Promise<null> {
   const allowed = await can("create", "Post");
   if (!allowed) {
-    throw new Response("You don't have permission to create posts.", { status: 403 });
+    throw new Response("You don't have permission to create posts.", {
+      status: 403,
+    });
   }
   return null;
 }
 
 type ActionData =
   | { ok: true }
-  | { ok: false; error: string; fieldErrors?: Partial<Record<keyof CreatePostInput, string>> };
+  | {
+      ok: false;
+      error: string;
+      fieldErrors?: Partial<Record<keyof CreatePostInput, string>>;
+    };
 
-export async function clientAction({ request }: Route.ClientActionArgs): Promise<ActionData | Response> {
+export async function clientAction({
+  request,
+}: Route.ClientActionArgs): Promise<ActionData | Response> {
   const form = await request.formData();
   const raw = {
     title: form.get("title"),
@@ -41,7 +54,11 @@ export async function clientAction({ request }: Route.ClientActionArgs): Promise
       const field = issue.path[0] as keyof CreatePostInput;
       if (!fieldErrors[field]) fieldErrors[field] = issue.message;
     }
-    return { ok: false, error: "Please fix the validation errors below.", fieldErrors };
+    return {
+      ok: false,
+      error: "Please fix the validation errors below.",
+      fieldErrors,
+    };
   }
 
   try {
@@ -75,8 +92,12 @@ export default function PostNewPage() {
       <PostForm
         submitLabel="Publish post"
         submitting={isSubmitting}
-        generalError={actionData && !actionData.ok ? actionData.error : undefined}
-        fieldErrors={actionData && !actionData.ok ? actionData.fieldErrors : undefined}
+        generalError={
+          actionData && !actionData.ok ? actionData.error : undefined
+        }
+        fieldErrors={
+          actionData && !actionData.ok ? actionData.fieldErrors : undefined
+        }
         onSubmit={handleSubmit}
       />
     </div>
@@ -84,4 +105,3 @@ export default function PostNewPage() {
 }
 
 export { RouteErrorBoundary as ErrorBoundary };
-

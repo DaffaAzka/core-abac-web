@@ -9,7 +9,7 @@ import { Can } from "~/features/access";
 import { formatDateOnly } from "~/lib/utils";
 
 export function meta(): Route.MetaDescriptors {
-  return [{ title: "Posts — find-cat-ely" }];
+  return [{ title: "Posts" }];
 }
 
 export const handle = { breadcrumb: "Posts" };
@@ -26,19 +26,17 @@ export default function PostsPage({ loaderData }: Route.ComponentProps) {
     <div className="space-y-6">
       <PageHeader
         title="Posts"
-        description="Public posts and entries accessible to your account."
-      >
+        description="Public posts and entries accessible to your account.">
         <Can action="create" subject="Post">
           <Link
             to="/posts/new"
-            className="inline-flex h-8 items-center px-3 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors"
-          >
+            className="inline-flex h-8 items-center px-3 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors">
             Write post
           </Link>
         </Can>
       </PageHeader>
 
-      {posts.length === 0 ? (
+      {posts.length === 0 ?
         <EmptyState
           title="No posts published yet"
           description="Posts published through the API or web client will appear here."
@@ -46,25 +44,24 @@ export default function PostsPage({ loaderData }: Route.ComponentProps) {
             <Can action="create" subject="Post">
               <Link
                 to="/posts/new"
-                className="inline-flex h-8 items-center px-3 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors"
-              >
+                className="inline-flex h-8 items-center px-3 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors">
                 Write the first post
               </Link>
             </Can>
           }
         />
-      ) : (
-        <div className="divide-y divide-border">
+      : <div className="divide-y divide-border">
           {posts.map((post) => (
             <article key={post.id} className="py-4 space-y-1">
               <div className="flex items-baseline justify-between gap-4">
                 <Link
                   to={`/posts/${post.id}`}
-                  className="text-base font-semibold text-foreground hover:text-primary transition-colors"
-                >
+                  className="text-base font-semibold text-foreground hover:text-primary transition-colors">
                   {post.title}
                 </Link>
-                <time className="text-xs text-muted-foreground shrink-0" dateTime={post.createdAt}>
+                <time
+                  className="text-xs text-muted-foreground shrink-0"
+                  dateTime={post.createdAt}>
                   {formatDateOnly(post.createdAt)}
                 </time>
               </div>
@@ -74,10 +71,9 @@ export default function PostsPage({ loaderData }: Route.ComponentProps) {
             </article>
           ))}
         </div>
-      )}
+      }
     </div>
   );
 }
 
 export { RouteErrorBoundary as ErrorBoundary };
-

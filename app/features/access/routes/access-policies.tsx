@@ -15,7 +15,7 @@ import { RouteErrorBoundary } from "~/components/RouteErrorBoundary";
 import { isApiError } from "~/lib/errors";
 
 export function meta(): Route.MetaDescriptors {
-  return [{ title: "ABAC Policies — find-cat-ely" }];
+  return [{ title: "ABAC Policies" }];
 }
 
 export const handle = { breadcrumb: "Policies" };
@@ -29,7 +29,9 @@ type ActionData =
   | { ok: true }
   | { ok: false; error: string; fieldErrors?: Record<string, string> };
 
-export async function clientAction({ request }: Route.ClientActionArgs): Promise<ActionData> {
+export async function clientAction({
+  request,
+}: Route.ClientActionArgs): Promise<ActionData> {
   const form = await request.formData();
   const intent = form.get("intent") as string;
 
@@ -57,9 +59,19 @@ export async function clientAction({ request }: Route.ClientActionArgs): Promise
         return { ok: false, error: "Rules must be a valid JSON array." };
       }
 
-      const parsed = definePolicySchema.safeParse({ name, priority, enabled, target, rules });
+      const parsed = definePolicySchema.safeParse({
+        name,
+        priority,
+        enabled,
+        target,
+        rules,
+      });
       if (!parsed.success) {
-        return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid policy definition." };
+        return {
+          ok: false,
+          error:
+            parsed.error.issues[0]?.message ?? "Invalid policy definition.",
+        };
       }
 
       await definePolicy(parsed.data);
@@ -81,12 +93,16 @@ export async function clientAction({ request }: Route.ClientActionArgs): Promise
   }
 }
 
-export default function AccessPoliciesPage({ loaderData }: Route.ComponentProps) {
+export default function AccessPoliciesPage({
+  loaderData,
+}: Route.ComponentProps) {
   const { policies } = loaderData;
   const actionData = useActionData<ActionData>();
   const submit = useSubmit();
   const [showDefineModal, setShowDefineModal] = React.useState(false);
-  const [policyToDelete, setPolicyToDelete] = React.useState<string | null>(null);
+  const [policyToDelete, setPolicyToDelete] = React.useState<string | null>(
+    null,
+  );
 
   const handleDeleteConfirm = () => {
     if (!policyToDelete) return;
@@ -101,7 +117,9 @@ export default function AccessPoliciesPage({ loaderData }: Route.ComponentProps)
       cell: (policy) => (
         <div className="space-y-0.5">
           <p className="font-semibold text-xs text-foreground">{policy.name}</p>
-          <p className="text-[10px] font-mono text-muted-foreground">{policy.id}</p>
+          <p className="text-[10px] font-mono text-muted-foreground">
+            {policy.id}
+          </p>
         </div>
       ),
     },
@@ -118,7 +136,9 @@ export default function AccessPoliciesPage({ loaderData }: Route.ComponentProps)
       key: "priority",
       header: "Priority",
       cell: (policy) => (
-        <span className="text-xs font-mono text-muted-foreground">{policy.priority}</span>
+        <span className="text-xs font-mono text-muted-foreground">
+          {policy.priority}
+        </span>
       ),
     },
     {
@@ -126,7 +146,11 @@ export default function AccessPoliciesPage({ loaderData }: Route.ComponentProps)
       header: "Target Matcher",
       cell: (policy) => {
         if (!policy.target || Object.keys(policy.target).length === 0) {
-          return <span className="text-xs text-muted-foreground">Universal (all requests)</span>;
+          return (
+            <span className="text-xs text-muted-foreground">
+              Universal (all requests)
+            </span>
+          );
         }
         return (
           <code className="text-[11px] font-mono bg-muted/50 px-1 py-0.5 rounded text-foreground">
@@ -153,8 +177,7 @@ export default function AccessPoliciesPage({ loaderData }: Route.ComponentProps)
             type="button"
             variant="destructive"
             size="xs"
-            onClick={() => setPolicyToDelete(policy.id)}
-          >
+            onClick={() => setPolicyToDelete(policy.id)}>
             Delete policy
           </Button>
         </div>
@@ -168,19 +191,21 @@ export default function AccessPoliciesPage({ loaderData }: Route.ComponentProps)
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <p className="text-xs text-muted-foreground">
-          {policies.length} dynamic ABAC polic{policies.length !== 1 ? "ies" : "y"} evaluated by CASL
+          {policies.length} dynamic ABAC polic
+          {policies.length !== 1 ? "ies" : "y"} evaluated by CASL
         </p>
         <Button
           type="button"
           size="sm"
-          onClick={() => setShowDefineModal(true)}
-        >
+          onClick={() => setShowDefineModal(true)}>
           Define policy
         </Button>
       </div>
 
       {actionData && !actionData.ok && (
-        <div role="alert" className="text-xs text-destructive rounded-md bg-destructive/10 border border-destructive/20 p-3">
+        <div
+          role="alert"
+          className="text-xs text-destructive rounded-md bg-destructive/10 border border-destructive/20 p-3">
           {actionData.error}
         </div>
       )}
@@ -217,7 +242,7 @@ function DefinePolicyForm({ onClose }: { onClose: () => void }) {
   const [enabled, setEnabled] = React.useState(true);
   const [target, setTarget] = React.useState("");
   const [rules, setRules] = React.useState(
-    JSON.stringify([{ action: "read", subject: "Post" }], null, 2)
+    JSON.stringify([{ action: "read", subject: "Post" }], null, 2),
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -231,17 +256,22 @@ function DefinePolicyForm({ onClose }: { onClose: () => void }) {
         target,
         rules,
       },
-      { method: "post" }
+      { method: "post" },
     );
     onClose();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-lg border border-border bg-card p-4 space-y-4">
+    <form
+      onSubmit={handleSubmit}
+      className="rounded-lg border border-border bg-card p-4 space-y-4">
       <div className="space-y-1">
-        <h2 className="text-sm font-semibold text-foreground">Define ABAC policy</h2>
+        <h2 className="text-sm font-semibold text-foreground">
+          Define ABAC policy
+        </h2>
         <p className="text-xs text-muted-foreground">
-          Policies evaluate context variables such as user attributes or environment variables.
+          Policies evaluate context variables such as user attributes or
+          environment variables.
         </p>
       </div>
 
@@ -268,7 +298,9 @@ function DefinePolicyForm({ onClose }: { onClose: () => void }) {
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="policy-target">Target Context Matcher (Optional JSON)</Label>
+        <Label htmlFor="policy-target">
+          Target Context Matcher (Optional JSON)
+        </Label>
         <Input
           id="policy-target"
           value={target}
@@ -315,4 +347,3 @@ function DefinePolicyForm({ onClose }: { onClose: () => void }) {
 }
 
 export { RouteErrorBoundary as ErrorBoundary };
-

@@ -1,5 +1,10 @@
 import * as React from "react";
-import { useActionData, useFetcher, useLoaderData, useSubmit } from "react-router";
+import {
+  useActionData,
+  useFetcher,
+  useLoaderData,
+  useSubmit,
+} from "react-router";
 import type { Route } from "./+types/access-roles";
 import { listRoles, defineRole, deleteRole, type Role } from "../api";
 import { defineRoleSchema, type DefineRoleInput } from "../schemas";
@@ -15,7 +20,7 @@ import { RouteErrorBoundary } from "~/components/RouteErrorBoundary";
 import { isApiError } from "~/lib/errors";
 
 export function meta(): Route.MetaDescriptors {
-  return [{ title: "RBAC Roles — find-cat-ely" }];
+  return [{ title: "RBAC Roles" }];
 }
 
 export const handle = { breadcrumb: "Roles" };
@@ -29,7 +34,9 @@ type ActionData =
   | { ok: true }
   | { ok: false; error: string; fieldErrors?: Record<string, string> };
 
-export async function clientAction({ request }: Route.ClientActionArgs): Promise<ActionData> {
+export async function clientAction({
+  request,
+}: Route.ClientActionArgs): Promise<ActionData> {
   const form = await request.formData();
   const intent = form.get("intent") as string;
 
@@ -40,8 +47,12 @@ export async function clientAction({ request }: Route.ClientActionArgs): Promise
       const parentsRaw = form.get("parents") as string;
       const rulesRaw = form.get("rules") as string;
 
-      const parents = parentsRaw
-        ? parentsRaw.split(",").map((s) => s.trim()).filter(Boolean)
+      const parents =
+        parentsRaw ?
+          parentsRaw
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean)
         : [];
 
       let rules: DefineRoleInput["rules"] = [];
@@ -53,9 +64,17 @@ export async function clientAction({ request }: Route.ClientActionArgs): Promise
         }
       }
 
-      const parsed = defineRoleSchema.safeParse({ name, description, parents, rules });
+      const parsed = defineRoleSchema.safeParse({
+        name,
+        description,
+        parents,
+        rules,
+      });
       if (!parsed.success) {
-        return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid role definition." };
+        return {
+          ok: false,
+          error: parsed.error.issues[0]?.message ?? "Invalid role definition.",
+        };
       }
 
       await defineRole(parsed.data);
@@ -96,8 +115,12 @@ export default function AccessRolesPage({ loaderData }: Route.ComponentProps) {
       header: "Role Name",
       cell: (role) => (
         <div className="space-y-0.5">
-          <p className="font-semibold font-mono text-xs text-foreground">{role.name}</p>
-          {role.description && <p className="text-xs text-muted-foreground">{role.description}</p>}
+          <p className="font-semibold font-mono text-xs text-foreground">
+            {role.name}
+          </p>
+          {role.description && (
+            <p className="text-xs text-muted-foreground">{role.description}</p>
+          )}
         </div>
       ),
     },
@@ -106,15 +129,14 @@ export default function AccessRolesPage({ loaderData }: Route.ComponentProps) {
       header: "Inherits From",
       cell: (role) => (
         <div className="flex flex-wrap gap-1">
-          {role.parents.length === 0 ? (
+          {role.parents.length === 0 ?
             <span className="text-xs text-muted-foreground">—</span>
-          ) : (
-            role.parents.map((p) => (
+          : role.parents.map((p) => (
               <Badge key={p} variant="secondary">
                 {p}
               </Badge>
             ))
-          )}
+          }
         </div>
       ),
     },
@@ -136,8 +158,7 @@ export default function AccessRolesPage({ loaderData }: Route.ComponentProps) {
             type="button"
             variant="destructive"
             size="xs"
-            onClick={() => setRoleToDelete(role.name)}
-          >
+            onClick={() => setRoleToDelete(role.name)}>
             Delete role
           </Button>
         </div>
@@ -151,19 +172,21 @@ export default function AccessRolesPage({ loaderData }: Route.ComponentProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <p className="text-xs text-muted-foreground">
-          {roles.length} role{roles.length !== 1 ? "s" : ""} registered in the RBAC hierarchy
+          {roles.length} role{roles.length !== 1 ? "s" : ""} registered in the
+          RBAC hierarchy
         </p>
         <Button
           type="button"
           size="sm"
-          onClick={() => setShowDefineModal(true)}
-        >
+          onClick={() => setShowDefineModal(true)}>
           Define role
         </Button>
       </div>
 
       {actionData && !actionData.ok && (
-        <div role="alert" className="text-xs text-destructive rounded-md bg-destructive/10 border border-destructive/20 p-3">
+        <div
+          role="alert"
+          className="text-xs text-destructive rounded-md bg-destructive/10 border border-destructive/20 p-3">
           {actionData.error}
         </div>
       )}
@@ -208,7 +231,7 @@ function DefineRoleForm({
   const [description, setDescription] = React.useState("");
   const [parents, setParents] = React.useState("");
   const [rules, setRules] = React.useState(
-    JSON.stringify([{ action: "read", subject: "Post" }], null, 2)
+    JSON.stringify([{ action: "read", subject: "Post" }], null, 2),
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -221,17 +244,22 @@ function DefineRoleForm({
         parents,
         rules,
       },
-      { method: "post" }
+      { method: "post" },
     );
     onClose();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-lg border border-border bg-card p-4 space-y-4">
+    <form
+      onSubmit={handleSubmit}
+      className="rounded-lg border border-border bg-card p-4 space-y-4">
       <div className="space-y-1">
-        <h2 className="text-sm font-semibold text-foreground">Define or update role</h2>
+        <h2 className="text-sm font-semibold text-foreground">
+          Define or update role
+        </h2>
         <p className="text-xs text-muted-foreground">
-          Specify role identifier, parent roles for inheritance, and optional CASL rules.
+          Specify role identifier, parent roles for inheritance, and optional
+          CASL rules.
         </p>
       </div>
 
@@ -292,4 +320,3 @@ function DefineRoleForm({
 }
 
 export { RouteErrorBoundary as ErrorBoundary };
-

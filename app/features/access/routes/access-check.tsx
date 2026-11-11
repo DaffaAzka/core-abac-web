@@ -12,7 +12,7 @@ import { RouteErrorBoundary } from "~/components/RouteErrorBoundary";
 import { isApiError } from "~/lib/errors";
 
 export function meta(): Route.MetaDescriptors {
-  return [{ title: "Test Permission — find-cat-ely" }];
+  return [{ title: "Test Permission" }];
 }
 
 export const handle = { breadcrumb: "Test Permission" };
@@ -25,7 +25,9 @@ type ActionData =
   | { ok: true; result: CheckPermissionResult }
   | { ok: false; error: string };
 
-export async function clientAction({ request }: Route.ClientActionArgs): Promise<ActionData> {
+export async function clientAction({
+  request,
+}: Route.ClientActionArgs): Promise<ActionData> {
   const form = await request.formData();
   const action = form.get("action") as string;
   const subject = form.get("subject") as string;
@@ -41,9 +43,17 @@ export async function clientAction({ request }: Route.ClientActionArgs): Promise
     }
   }
 
-  const parsed = checkPermissionSchema.safeParse({ action, subject, field, attributes });
+  const parsed = checkPermissionSchema.safeParse({
+    action,
+    subject,
+    field,
+    attributes,
+  });
   if (!parsed.success) {
-    return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid check request." };
+    return {
+      ok: false,
+      error: parsed.error.issues[0]?.message ?? "Invalid check request.",
+    };
   }
 
   try {
@@ -75,20 +85,25 @@ export default function AccessCheckPage() {
         field,
         attributes,
       },
-      { method: "post" }
+      { method: "post" },
     );
   };
 
   return (
     <div className="space-y-6 max-w-xl">
       <div className="space-y-1">
-        <h2 className="text-sm font-semibold text-foreground">ABAC Decision Tester</h2>
+        <h2 className="text-sm font-semibold text-foreground">
+          ABAC Decision Tester
+        </h2>
         <p className="text-xs text-muted-foreground">
-          Query the backend authorization engine (`POST /access/check`) to test whether the current principal is permitted to perform an action.
+          Query the backend authorization engine (`POST /access/check`) to test
+          whether the current principal is permitted to perform an action.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="rounded-lg border border-border bg-card p-4 space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="rounded-lg border border-border bg-card p-4 space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1.5">
             <Label htmlFor="check-action">Action</Label>
@@ -123,7 +138,9 @@ export default function AccessCheckPage() {
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="check-attributes">Subject Attributes (Optional JSON)</Label>
+          <Label htmlFor="check-attributes">
+            Subject Attributes (Optional JSON)
+          </Label>
           <Textarea
             id="check-attributes"
             rows={3}
@@ -141,33 +158,51 @@ export default function AccessCheckPage() {
 
       {actionData && (
         <div className="animate-in fade-in">
-          {actionData.ok ? (
+          {actionData.ok ?
             <div
               className={`rounded-lg border p-4 space-y-2 ${
-                actionData.result.allowed
-                  ? "border-emerald-500/30 bg-emerald-500/10"
-                  : "border-destructive/30 bg-destructive/10"
-              }`}
-            >
+                actionData.result.allowed ?
+                  "border-emerald-500/30 bg-emerald-500/10"
+                : "border-destructive/30 bg-destructive/10"
+              }`}>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Evaluation Result
                 </span>
-                <Badge variant={actionData.result.allowed ? "success" : "destructive"}>
+                <Badge
+                  variant={
+                    actionData.result.allowed ? "success" : "destructive"
+                  }>
                   {actionData.result.allowed ? "ALLOWED" : "DENIED"}
                 </Badge>
               </div>
               <div className="text-xs space-y-1 font-mono">
-                <p>Action: <span className="text-foreground">{actionData.result.action}</span></p>
-                <p>Subject: <span className="text-foreground">{actionData.result.subject}</span></p>
-                <p>Principal ID: <span className="text-foreground">{actionData.result.userId}</span></p>
+                <p>
+                  Action:{" "}
+                  <span className="text-foreground">
+                    {actionData.result.action}
+                  </span>
+                </p>
+                <p>
+                  Subject:{" "}
+                  <span className="text-foreground">
+                    {actionData.result.subject}
+                  </span>
+                </p>
+                <p>
+                  Principal ID:{" "}
+                  <span className="text-foreground">
+                    {actionData.result.userId}
+                  </span>
+                </p>
               </div>
             </div>
-          ) : (
-            <div role="alert" className="text-xs text-destructive rounded-md bg-destructive/10 border border-destructive/20 p-3">
+          : <div
+              role="alert"
+              className="text-xs text-destructive rounded-md bg-destructive/10 border border-destructive/20 p-3">
               {actionData.error}
             </div>
-          )}
+          }
         </div>
       )}
     </div>
@@ -175,4 +210,3 @@ export default function AccessCheckPage() {
 }
 
 export { RouteErrorBoundary as ErrorBoundary };
-

@@ -11,27 +11,36 @@ import { RouteErrorBoundary } from "~/components/RouteErrorBoundary";
 import { isApiError } from "~/lib/errors";
 
 export function meta(): Route.MetaDescriptors {
-  return [{ title: "Users — find-cat-ely" }];
+  return [{ title: "Users" }];
 }
 
 export const handle = { breadcrumb: "Users" };
 
-export async function clientLoader(): Promise<{ users: UserListItem[]; roles: Role[] }> {
+export async function clientLoader(): Promise<{
+  users: UserListItem[];
+  roles: Role[];
+}> {
   const allowed = await can("read", "User");
   if (!allowed) {
-    throw new Response("You do not have permission to view users.", { status: 403 });
+    throw new Response("You do not have permission to view users.", {
+      status: 403,
+    });
   }
 
   const [users, roles] = await Promise.all([
     listUsers(),
-    can("manage", "all").then((canManage) => (canManage ? listRoles() : Promise.resolve([]))),
+    can("manage", "all").then((canManage) =>
+      canManage ? listRoles() : Promise.resolve([]),
+    ),
   ]);
   return { users, roles };
 }
 
 type ActionData = { ok: boolean; error?: string };
 
-export async function clientAction({ request }: Route.ClientActionArgs): Promise<ActionData> {
+export async function clientAction({
+  request,
+}: Route.ClientActionArgs): Promise<ActionData> {
   const form = await request.formData();
   const intent = form.get("intent") as string;
   const userId = form.get("userId") as string;
@@ -54,7 +63,13 @@ export async function clientAction({ request }: Route.ClientActionArgs): Promise
   }
 }
 
-function RoleActionsCell({ user, roles }: { user: UserListItem; roles: Role[] }) {
+function RoleActionsCell({
+  user,
+  roles,
+}: {
+  user: UserListItem;
+  roles: Role[];
+}) {
   const [isAssigning, setIsAssigning] = React.useState(false);
   const [selectedRole, setSelectedRole] = React.useState<string>("");
   const fetcher = useFetcher<ActionData>();
@@ -67,7 +82,7 @@ function RoleActionsCell({ user, roles }: { user: UserListItem; roles: Role[] })
     if (!selectedRole) return;
     fetcher.submit(
       { intent: "assign-role", userId: user.id, role: selectedRole },
-      { method: "post" }
+      { method: "post" },
     );
     setIsAssigning(false);
     setSelectedRole("");
@@ -76,21 +91,20 @@ function RoleActionsCell({ user, roles }: { user: UserListItem; roles: Role[] })
   const handleRevoke = (role: string) => {
     fetcher.submit(
       { intent: "revoke-role", userId: user.id, role },
-      { method: "post" }
+      { method: "post" },
     );
   };
 
   return (
     <div className="flex items-center justify-end gap-2">
       <Can action="manage" subject="all">
-        {isAssigning ? (
+        {isAssigning ?
           <form onSubmit={handleAssign} className="flex items-center gap-1.5">
             <select
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
               className="h-7 rounded-md border border-input bg-background px-2 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
-              required
-            >
+              required>
               <option value="">Select role…</option>
               {availableRoles.map((r) => (
                 <option key={r.name} value={r.name}>
@@ -98,20 +112,21 @@ function RoleActionsCell({ user, roles }: { user: UserListItem; roles: Role[] })
                 </option>
               ))}
             </select>
-            <Button type="submit" size="xs" disabled={isSubmitting || !selectedRole}>
+            <Button
+              type="submit"
+              size="xs"
+              disabled={isSubmitting || !selectedRole}>
               Assign
             </Button>
             <Button
               type="button"
               variant="outline"
               size="xs"
-              onClick={() => setIsAssigning(false)}
-            >
+              onClick={() => setIsAssigning(false)}>
               Cancel
             </Button>
           </form>
-        ) : (
-          availableRoles.length > 0 && (
+        : availableRoles.length > 0 && (
             <Button
               type="button"
               variant="outline"
@@ -119,12 +134,11 @@ function RoleActionsCell({ user, roles }: { user: UserListItem; roles: Role[] })
               onClick={() => {
                 setSelectedRole(availableRoles[0]?.name ?? "");
                 setIsAssigning(true);
-              }}
-            >
+              }}>
               Assign role
             </Button>
           )
-        )}
+        }
       </Can>
     </div>
   );
@@ -149,18 +163,21 @@ export default function UsersPage({ loaderData }: Route.ComponentProps) {
       header: "Assigned Roles",
       cell: (user) => (
         <div className="flex flex-wrap gap-1 items-center">
-          {user.roles.length === 0 ? (
-            <span className="text-xs text-muted-foreground">No roles assigned</span>
-          ) : (
-            user.roles.map((role) => (
+          {user.roles.length === 0 ?
+            <span className="text-xs text-muted-foreground">
+              No roles assigned
+            </span>
+          : user.roles.map((role) => (
               <span key={role} className="inline-flex items-center gap-1">
-                <Badge variant="accent">{role}</Badge>
-                <Can action="manage" subject="all">
-                  <RoleRevokeButton userId={user.id} role={role} />
-                </Can>
+                <Badge variant="default">
+                  <span className="ml-2">{role}</span>
+                  <Can action="manage" subject="all">
+                    <RoleRevokeButton userId={user.id} role={role} />
+                  </Can>
+                </Badge>
               </span>
             ))
-          )}
+          }
         </div>
       ),
     },
@@ -201,17 +218,19 @@ function RoleRevokeButton({ userId, role }: { userId: string; role: string }) {
       onClick={() => {
         fetcher.submit(
           { intent: "revoke-role", userId, role },
-          { method: "post" }
+          { method: "post" },
         );
       }}
       disabled={isSubmitting}
       aria-label={`Revoke role ${role}`}
-      className="text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50"
-    >
-      <span aria-hidden="true" className="text-xs">×</span>
+      className="text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50">
+      <span
+        aria-hidden="true"
+        className="text-xs text-white rounded-full w-4 h-4 flex items-center justify-center hover:text-gray-400">
+        ×
+      </span>
     </button>
   );
 }
 
 export { RouteErrorBoundary as ErrorBoundary };
-
